@@ -61,3 +61,4 @@ export const getCategories = () => {
     })
         .then(response => response.json())
 }
+

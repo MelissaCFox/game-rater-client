@@ -29,6 +29,18 @@ export const GameDetail = (props) => {
                     }
                 </div>
 
+                <div className="game__reviews">Reviews:
+                    {
+                        game.reviews?.map((review) => {
+                            return <><div key={review.id} className="game__review">{review.review}</div>
+                            <button onClick={() => history.push(`/games/${game.id}/review/${review.id}`)}>Edit</button>
+                            </>
+                        })
+                    }
+                </div>
+
+                <button onClick={() => history.push(`/games/${game.id}/review`)}>Review</button>
+
                 <button onClick={() => history.push(`/games/edit/${game.id}`)}>Edit</button>
                 <button onClick={() => { deleteGame(game.id).then(setGame) }}>Delete</button>
             </section>
