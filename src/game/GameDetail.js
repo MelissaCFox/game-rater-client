@@ -26,7 +26,13 @@ export const GameDetail = (props) => {
 
     const submitRating = () => {
         createRating(gameRating)
-        .then(setNewRating(!newRating))
+        .then(() => {
+            setNewRating(!newRating)
+            document.getElementById("gameRating").value = "5"
+            const copy = {...gameRating}
+            copy.rating = 5
+            setGameRating(copy)
+        })
     }
 
     return (
