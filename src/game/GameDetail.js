@@ -12,10 +12,11 @@ export const GameDetail = (props) => {
         gameId: parseInt(gameId),
         rating: 5
     })
+    const [newRating, setNewRating] = useState(false)
 
     useEffect(() => {
         getGame(gameId).then(data => setGame(data))
-    }, [])
+    }, [newRating])
 
     const setRating = (event) => {
         const copy = {...gameRating}
@@ -25,6 +26,7 @@ export const GameDetail = (props) => {
 
     const submitRating = () => {
         createRating(gameRating)
+        .then(setNewRating(!newRating))
     }
 
     return (
@@ -33,6 +35,7 @@ export const GameDetail = (props) => {
                 <div className="game__title">{game.title} by {game.designer}</div>
                 <div className="game__year">Released in {game.year_released}</div>
                 <div className="game__description">{game.description}</div>
+                <div className="game__averageRating">Average Player Rating: {game.average_rating}/10</div>
                 <div className="game__ageRecommendation">Recommended Age: {game.age_recommendation}</div>
                 <div className="game__estPlaytime">Est. Playtime: {game.est_playtime}</div>
                 <div className="game__numberOfPlayers">Number of Players Needed: {game.number_of_players}</div>
