@@ -17,11 +17,15 @@ export const GameDetail = (props) => {
         gameId: parseInt(gameId),
         gameImage: ""
     })
+    const [imgSrc, setImgSrc] = useState("")
+
 
     useEffect(() => {
         getGame(gameId).then(data => {
             setGame(data)
-            setImgSrc(data.image[0].image)
+            if(data.images.length > 0){
+                setImgSrc(data.images[0].image)
+            }
         })
         
     }, [newRating])
@@ -57,9 +61,8 @@ export const GameDetail = (props) => {
             setGameImage(copy)
         });
     }
-    
-    const [imgSrc, setImgSrc] = useState("")
-    
+
+
 
     return (
         <>

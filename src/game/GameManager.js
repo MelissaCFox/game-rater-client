@@ -8,7 +8,7 @@ export const getGames = () => {
         .then(response => response.json())
 }
 
-export const getGame= (id) => {
+export const getGame = (id) => {
     return fetch(`http://localhost:8000/games/${id}`, {
         headers: {
             "Authorization": `Token ${localStorage.getItem("gr_token")}`
@@ -55,6 +55,16 @@ export const deleteGame = (id) => {
 
 export const getCategories = () => {
     return fetch("http://localhost:8000/categories", {
+        headers: {
+            "Authorization": `Token ${localStorage.getItem("gr_token")}`
+        }
+    })
+        .then(response => response.json())
+}
+
+
+export const searchGames = (searchTerm) => {
+    return fetch(`http://localhost:8000/games?q=${searchTerm}`, {
         headers: {
             "Authorization": `Token ${localStorage.getItem("gr_token")}`
         }

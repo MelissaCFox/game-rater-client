@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react"
 import { Link, useHistory } from "react-router-dom"
-import { deleteGame, getGames } from "./GameManager.js"
+import { getGames, searchGames } from "./GameManager.js"
 
 export const GameList = (props) => {
     const [games, setGames] = useState([])
     const history = useHistory()
+    const [searchTerm, setSearchTerm] = useState("")
 
     useEffect(() => {
-        getGames().then(data => setGames(data))
-    }, [])
+        if (searchTerm !== "") {
+            searchGames(searchTerm).then(setGames)
+        } else {
+            getGames().then(data => setGames(data))
+        }
+    }, [searchTerm])
 
     return (
         <>
@@ -17,6 +22,11 @@ export const GameList = (props) => {
                     history.push({ pathname: "/games/new" })
                 }}
             >Register New Game</button>
+
+            <div className="search-bar">
+                <input className="input" type="text" palceholder="Search games" onKeyUp={(event) => setSearchTerm(event.target.value)}/>
+            </div>
+
             <article className="games">
                 {
                     games.map(game => {
