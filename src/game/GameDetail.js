@@ -23,11 +23,11 @@ export const GameDetail = (props) => {
     useEffect(() => {
         getGame(gameId).then(data => {
             setGame(data)
-            if(data.images.length > 0){
+            if (data.images.length > 0) {
                 setImgSrc(data.images[0].image)
             }
         })
-        
+
     }, [newRating])
 
     const setRating = (event) => {
@@ -52,11 +52,11 @@ export const GameDetail = (props) => {
         reader.addEventListener('load', () => callback(reader.result));
         reader.readAsDataURL(file);
     }
-    
+
     const createGameImageString = (event) => {
         getBase64(event.target.files[0], (base64ImageString) => {
             console.log("Base64 of file is", base64ImageString);
-            const copy = {...gameImage}
+            const copy = { ...gameImage }
             copy.gameImage = base64ImageString
             setGameImage(copy)
         });
@@ -90,27 +90,33 @@ export const GameDetail = (props) => {
                 </div>
 
                 <div>Upload an Image
-                <input type="file" id="game_image" onChange={createGameImageString} />
-                <input type="hidden" name="game_id" value={game.id} />
-                <button onClick={() => {
-                    // Upload the stringified image that is stored in state
-                }}>Upload</button>
+                    <input type="file" id="game_image" onChange={createGameImageString} />
+                    <input type="hidden" name="game_id" value={game.id} />
+                    <button onClick={() => {
+                        // Upload the stringified image that is stored in state
+                    }}>Upload</button>
                 </div>
 
                 <div className="game__reviews">Reviews:
                     {
                         game.reviews?.map((review) => {
                             return <div key={review.id}><div className="game__review">{review.review}</div>
-                                <button onClick={() => history.push(`/games/${game.id}/review/${review.id}`)}>Edit</button>
+                                {
+                                    review.author
+                                        ? <button onClick={() => history.push(`/games/${game.id}/review/${review.id}`)}>Edit</button>
+                                        : ""
+                                }
+                                
                             </div>
                         })
                     }
                 </div>
 
-                <button onClick={() => history.push(`/games/${game.id}/review`)}>Review</button>
+                <button onClick={() => history.push(`/games/${game.id}/review`)}>Submit Review</button>
 
-                <button onClick={() => history.push(`/games/edit/${game.id}`)}>Edit</button>
-                <button onClick={() => { deleteGame(game.id).then(setGame) }}>Delete</button>
+<button onClick={() => history.push(`/games/edit/${game.id}`)}>Edit Game</button>
+                            <button onClick={() => { deleteGame(game.id).then(setGame) }}>Delete Game</button>
+
             </section>
         </>
     )
