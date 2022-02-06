@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from "react"
 import { Link, useHistory } from "react-router-dom"
-import { getGames, searchGames } from "./GameManager.js"
+import { getGames, orderGames, searchGames } from "./GameManager.js"
 
 export const GameList = (props) => {
     const [games, setGames] = useState([])
     const history = useHistory()
     const [searchTerm, setSearchTerm] = useState("")
+    const [order, setOrder] = useState("")
 
     useEffect(() => {
         if (searchTerm !== "") {
             searchGames(searchTerm).then(setGames)
+        } else if (order !== "") {
+            orderGames(order).then(setGames)
         } else {
             getGames().then(data => setGames(data))
         }
-    }, [searchTerm])
+    }, [searchTerm, order])
+
 
     return (
         <>
@@ -24,7 +28,17 @@ export const GameList = (props) => {
             >Register New Game</button>
 
             <div className="search-bar">
-                <input className="input" type="text" palceholder="Search games" onKeyUp={(event) => setSearchTerm(event.target.value)}/>
+                <input className="input" type="text" placeholder="Search games" onKeyUp={(event) => setSearchTerm(event.target.value)}/>
+            </div>
+
+            <div className="order-options">
+                <select onChange={(e) => setOrder(e.target.value)}>
+                    <option value="">Order By</option>
+                    <option value="designer">Designer (A-Z)</option>
+                    <option value="year">Year Released (most recent first)</option>
+                    <option value="playtime">Est. Playtime (short-long)</option>
+                </select>
+
             </div>
 
             <article className="games">
