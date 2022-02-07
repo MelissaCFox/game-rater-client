@@ -80,3 +80,16 @@ export const orderGames= (order) => {
         .then(response => response.json())
 }
 
+export const createGameImage = (image) => {
+    return fetch("http://localhost:8000/images", {
+        method: "POST",
+        headers: {
+            "Authorization": `Token ${localStorage.getItem("gr_token")}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(image)
+
+    })
+        .then(response => response.json())
+}
+

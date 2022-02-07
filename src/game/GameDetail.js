@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { useHistory } from "react-router-dom"
-import { deleteGame, getGame } from "./GameManager.js"
+import { createGameImage, deleteGame, getGame } from "./GameManager.js"
 import { createRating, getRatings } from "./RatingManager.js"
 
 export const GameDetail = (props) => {
@@ -13,9 +13,10 @@ export const GameDetail = (props) => {
         rating: 5
     })
     const [newRating, setNewRating] = useState(false)
+    const [newImage, setNewImage] = useState(false)
     const [gameImage, setGameImage] = useState({
         gameId: parseInt(gameId),
-        gameImage: ""
+        image: ""
     })
     const [imgSrc, setImgSrc] = useState("")
 
@@ -28,7 +29,7 @@ export const GameDetail = (props) => {
             }
         })
 
-    }, [newRating])
+    }, [newRating, newImage])
 
     const setRating = (event) => {
         const copy = { ...gameRating }
@@ -57,9 +58,16 @@ export const GameDetail = (props) => {
         getBase64(event.target.files[0], (base64ImageString) => {
             console.log("Base64 of file is", base64ImageString);
             const copy = { ...gameImage }
-            copy.gameImage = base64ImageString
+            copy.image = base64ImageString
             setGameImage(copy)
         });
+    }
+
+    const submitGameImage = () => {
+        if (gameImage.image !== ""){
+            createGameImage(gameImage)
+                .then(() => setNewImage(!newImage))
+        }
     }
 
 
@@ -68,7 +76,9 @@ export const GameDetail = (props) => {
         <>
             <section key={`game--${game.id}`} className="game">
                 <div className="game__title">{game.title} by {game.designer}</div>
-                <img src={imgSrc}></img>
+
+                <img src={imgSrc} />
+
                 <div className="game__year">Released in {game.year_released}</div>
                 <div className="game__description">{game.description}</div>
                 <div className="game__averageRating">Average Player Rating: {game.average_rating}{game.average_rating === "No Ratings Yet" ? "" : "/10"}</div>
@@ -92,9 +102,10 @@ export const GameDetail = (props) => {
                 <div>Upload an Image
                     <input type="file" id="game_image" onChange={createGameImageString} />
                     <input type="hidden" name="game_id" value={game.id} />
-                    <button onClick={() => {
-                        // Upload the stringified image that is stored in state
-                    }}>Upload</button>
+                    
+                    <img class="uploadImage" alt="image to upload" src={`${gameImage.image}`} />
+
+                    <button onClick={submitGameImage}>Upload</button>
                 </div>
 
                 <div className="game__reviews">Reviews:
