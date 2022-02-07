@@ -25,8 +25,11 @@ export const GameDetail = (props) => {
         getGame(gameId).then(data => {
             setGame(data)
             if (data.images.length > 0) {
-                setImgSrc(data.images[0].image)
+                setImgSrc(data.images[0].base64)
             }
+            const copy = { ...gameImage }
+            copy.image = ""
+            setGameImage(copy)
         })
 
     }, [newRating, newImage])
@@ -64,7 +67,7 @@ export const GameDetail = (props) => {
     }
 
     const submitGameImage = () => {
-        if (gameImage.image !== ""){
+        if (gameImage.image !== "") {
             createGameImage(gameImage)
                 .then(() => setNewImage(!newImage))
         }
@@ -77,7 +80,7 @@ export const GameDetail = (props) => {
             <section key={`game--${game.id}`} className="game">
                 <div className="game__title">{game.title} by {game.designer}</div>
 
-                <img src={imgSrc} />
+                <img className="uploadImage" src={imgSrc} />
 
                 <div className="game__year">Released in {game.year_released}</div>
                 <div className="game__description">{game.description}</div>
@@ -102,9 +105,18 @@ export const GameDetail = (props) => {
                 <div>Upload an Image
                     <input type="file" id="game_image" onChange={createGameImageString} />
                     <input type="hidden" name="game_id" value={game.id} />
-                    
-                    <img class="uploadImage" alt="image to upload" src={`${gameImage.image}`} />
 
+                    {
+                        gameImage.image
+                            ? <>
+                                <img className="uploadImage" alt="image to upload" src={`${gameImage.image}`} />
+                                <button onClick={() => {
+                                    document.getElementById("game_image").value = ""
+                                    setNewImage(!newImage)
+                                }}>Cancel</button>
+                            </>
+                            : ""
+                    }
                     <button onClick={submitGameImage}>Upload</button>
                 </div>
 
@@ -117,7 +129,7 @@ export const GameDetail = (props) => {
                                         ? <button onClick={() => history.push(`/games/${game.id}/review/${review.id}`)}>Edit</button>
                                         : ""
                                 }
-                                
+
                             </div>
                         })
                     }
@@ -125,8 +137,8 @@ export const GameDetail = (props) => {
 
                 <button onClick={() => history.push(`/games/${game.id}/review`)}>Submit Review</button>
 
-<button onClick={() => history.push(`/games/edit/${game.id}`)}>Edit Game</button>
-                            <button onClick={() => { deleteGame(game.id).then(setGame) }}>Delete Game</button>
+                <button onClick={() => history.push(`/games/edit/${game.id}`)}>Edit Game</button>
+                <button onClick={() => { deleteGame(game.id).then(setGame) }}>Delete Game</button>
 
             </section>
         </>
